@@ -20,7 +20,7 @@ jobs:
       #  run: |
       #    python -c """
       #    import yaml, datetime
-#
+      #
       #    # Config variables
       #    def flatten_config(prefix, config):
       #      for key, value in config.items():
@@ -28,12 +28,12 @@ jobs:
       #          flatten_config(f'{prefix}{key.upper()}_', value)
       #        else:
       #          print(f'{prefix}{key.upper()}={value}')
-#
+      #
       #    with open('config.yml') as f:
       #      config = yaml.safe_load(f)
-#
+      #
       #    flatten_config('', config)
-#
+      #
       #    # Runtime variables
       #    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
       #    print(f'TIMESTAMP={timestamp}')
@@ -44,12 +44,13 @@ jobs:
       #  with:
       #    python-version: "3.8"
 
+      - name: Convert crawl-config.yaml to crawl-config.json
+        run: |
+          python3 -c "import sys, yaml, json; json.dump(yaml.safe_load(open('crawl-config.yaml')), open('crawl-config.json','w'))"
+
       - name: Run Browsertrix Crawler
         run: |
-          python3 -c "import sys, yaml, json; print(json.dumps(yaml.safe_load(sys.stdin)))" < ./crawl-config.yaml | docker run -i -v /data:/crawls/ webrecorder/browsertrix-crawler crawl --config stdin
-
-      #--seedFile /app/seedFile.txt
-
+          docker run -v ${{ github.workspace }}/data:/crawls/ webrecorder/browsertrix-crawler crawl --config /data/crawl-config.json
 
       #- name: Install dependencies
       #  run: |
@@ -92,87 +93,87 @@ jobs:
   #    - name: Checkout repo
   #      uses: actions/checkout@v4
 #
-  #    - name: Download raw data
-  #      uses: actions/download-artifact@v4
-  #      with:
-  #        name: raw-data
-  #        path: ./data/
+#    - name: Download raw data
+#      uses: actions/download-artifact@v4
+#      with:
+#        name: raw-data
+#        path: ./data/
 #
-  #    - name: Set up Python
-  #      uses: actions/setup-python@v4
-  #      with:
-  #        python-version: "3.8"
+#    - name: Set up Python
+#      uses: actions/setup-python@v4
+#      with:
+#        python-version: "3.8"
 #
-  #    - name: Install dependencies
-  #      run: |
-  #        python -m pip install --upgrade pip
-  #        pip install papermill ipykernel
-  #        python -m ipykernel install --user --name python3 --display-name "Python 3"
+#    - name: Install dependencies
+#      run: |
+#        python -m pip install --upgrade pip
+#        pip install papermill ipykernel
+#        python -m ipykernel install --user --name python3 --display-name "Python 3"
 #
-  #    - name: Run Transform Notebook
-  #      run: |
-  #        papermill notebooks/02_transform.ipynb output/02_transform_out.ipynb --kernel python
+#    - name: Run Transform Notebook
+#      run: |
+#        papermill notebooks/02_transform.ipynb output/02_transform_out.ipynb --kernel python
 #
-  #    - name: Upload Transform Notebook
-  #      uses: actions/upload-artifact@v4
-  #      with:
-  #        name: transform_notebook
-  #        path: output/02_transform_out.ipynb
-  #        retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
+#    - name: Upload Transform Notebook
+#      uses: actions/upload-artifact@v4
+#      with:
+#        name: transform_notebook
+#        path: output/02_transform_out.ipynb
+#        retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
 #
-  #    - name: Upload clean data
-  #      uses: actions/upload-artifact@v4
-  #      with:
-  #        name: clean-data
-  #        path: ./data/clean-data.csv
-  #        retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_DATA_RETENTION_DAYS }}
+#    - name: Upload clean data
+#      uses: actions/upload-artifact@v4
+#      with:
+#        name: clean-data
+#        path: ./data/clean-data.csv
+#        retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_DATA_RETENTION_DAYS }}
 #
-  #load:
-  #  name: Load
-  #  needs: transform
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - name: Checkout repo
-  #      uses: actions/checkout@v4
+#load:
+#  name: Load
+#  needs: transform
+#  runs-on: ubuntu-latest
+#  steps:
+#    - name: Checkout repo
+#      uses: actions/checkout@v4
 #
-  #    - name: Download clean data
-  #      uses: actions/download-artifact@v4
-  #      with:
-  #        name: clean-data
-  #        path: ./data/
+#    - name: Download clean data
+#      uses: actions/download-artifact@v4
+#      with:
+#        name: clean-data
+#        path: ./data/
 #
-  #    #- name: Set up Python
-  #    #  uses: actions/setup-python@v4
-  #    #  with:
-      #    python-version: "3.8"
+#    #- name: Set up Python
+#    #  uses: actions/setup-python@v4
+#    #  with:
+#    python-version: "3.8"
 
-      #- name: Install dependencies
-      #  run: |
-      #    python -m pip install --upgrade pip
-      #    pip install papermill ipykernel great_expectations
-      #    python -m ipykernel install --user --name python3 --display-name "Python 3"
+#- name: Install dependencies
+#  run: |
+#    python -m pip install --upgrade pip
+#    pip install papermill ipykernel great_expectations
+#    python -m ipykernel install --user --name python3 --display-name "Python 3"
 
-      #- name: Run Load Notebook
-      #  run: |
-      #    papermill notebooks/03_load.ipynb output/03_load_out.ipynb --kernel python
+#- name: Run Load Notebook
+#  run: |
+#    papermill notebooks/03_load.ipynb output/03_load_out.ipynb --kernel python
 
-      #- name: Upload Load Notebook
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: load_notebook
-      #    path: output/03_load_out.ipynb
-      #    retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
+#- name: Upload Load Notebook
+#  uses: actions/upload-artifact@v4
+#  with:
+#    name: load_notebook
+#    path: output/03_load_out.ipynb
+#    retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
 
-      #- name: Run Data Quality Checks
-      #  run: |
-      #    great_expectations checkpoint run -n etl_checkpoint --fail-fast
+#- name: Run Data Quality Checks
+#  run: |
+#    great_expectations checkpoint run -n etl_checkpoint --fail-fast
 
-      #- name: Upload Data Quality Report
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: data_quality_report
-      #    path: great_expectations/uncommitted/validations/
-      #    retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
+#- name: Upload Data Quality Report
+#  uses: actions/upload-artifact@v4
+#  with:
+#    name: data_quality_report
+#    path: great_expectations/uncommitted/validations/
+#    retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
 
 #      - name: Push to Kaggle
 #        uses: jaimevalero/push-kaggle-dataset@v3.2
