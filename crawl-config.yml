@@ -1,34 +1,7 @@
-name: crawl-test-2
-
+name: crawl-test-1
+collection: configtest
 seeds:
-  - url: https://umsa.bo/
-    depth: 4
-    scopeType: "prefix"
-
-collection: config-stdin
-depth: 1
-behaviors: ""
+  - https://umsa.bo/
+  - https://www.minedu.gob.bo/
 
 generateWACZ: true
-
-warcinfo:
-  operator: test
-  host: hostname
-
-sitemap: true
-
-include:
-  - "https://*.bo/*"
-
-behavior:
-  waitUntil: networkidle
-  pageLoadTimeout: 20000
-  browser: chromium
-
-screenshot:
-  enable: true
-
-text:
-  enable: true
-
-headless: true

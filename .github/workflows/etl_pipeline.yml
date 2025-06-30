@@ -46,7 +46,9 @@ jobs:
 
       - name: Run Browsertrix Crawler
         run: |
-          docker run -v $(pwd)/data:/crawls -v $(pwd)/crawl-config.yaml:/app/crawl-config.yaml -v $(pwd)/seedFile.txt:/app/seedFile.txt webrecorder/browsertrix-crawler crawl --config /app/crawl-config.yaml --seedFile /app/seedFile.txt
+          docker run -v $(pwd)/data:/crawls -v $(pwd)/crawl-config.yaml:/app/crawl-config.yaml -v $(pwd)/seedFile.txt:/app/seedFile.txt webrecorder/browsertrix-crawler crawl --config /app/crawl-config.yaml 
+      
+      #--seedFile /app/seedFile.txt
 
 
       #- name: Install dependencies
