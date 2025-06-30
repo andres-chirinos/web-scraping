@@ -66,10 +66,11 @@ jobs:
       #    retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
 
       - name: Upload raw data
+        id: upload-raw-data-step
         uses: actions/upload-artifact@v4
         with:
           name: raw-data
-          path: data/raw-data.csv
+          path: ./data/*
           retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_DATA_RETENTION_DAYS }}
 
       #- name: Upload to Google Drive
