@@ -46,8 +46,8 @@ jobs:
 
       - name: Run Browsertrix Crawler
         run: |
-          docker run -v /data:/crawls webrecorder/browsertrix-crawler crawl --config crawl-config.yaml 
-      
+          cat ./crawl-config.yaml | docker run -i -v /data:/crawls/ webrecorder/browsertrix-crawler crawl --config stdin
+
       #--seedFile /app/seedFile.txt
 
 
