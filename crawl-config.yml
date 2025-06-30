@@ -1,0 +1,34 @@
+name: crawl-test-2
+
+seeds:
+  - url: https://umsa.bo/
+    depth: 4
+    scopeType: "prefix"
+
+collection: config-stdin
+depth: 1
+behaviors: ""
+
+generateWACZ: true
+
+warcinfo:
+  operator: test
+  host: hostname
+
+sitemap: true
+
+include:
+  - "https://*.bo/*"
+
+behavior:
+  waitUntil: networkidle
+  pageLoadTimeout: 20000
+  browser: chromium
+
+screenshot:
+  enable: true
+
+text:
+  enable: true
+
+headless: true
