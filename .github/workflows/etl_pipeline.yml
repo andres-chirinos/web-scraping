@@ -39,27 +39,32 @@ jobs:
           print(f'TIMESTAMP={timestamp}')
           """ >> $GITHUB_ENV
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.8"
+      #- name: Set up Python
+      #  uses: actions/setup-python@v4
+      #  with:
+      #    python-version: "3.8"
 
-      - name: Install dependencies
+      - name: Run Browsertrix Crawler
         run: |
-          python -m pip install --upgrade pip
-          pip install papermill pandas ipykernel
-          python -m ipykernel install --user --name python3 --display-name "Python 3"
+          docker run -v $(pwd)/data:/crawls webrecorder/browsertrix-crawler \
+        crawl --url=https://www.minedu.gob.bo --scopeType=page --generateWarc
 
-      - name: Run ETL Notebook
-        run: |
-          papermill notebooks/01_extract.ipynb output/01_extract_out.ipynb --kernel python
+      #- name: Install dependencies
+      #  run: |
+      #    python -m pip install --upgrade pip
+      #    pip install papermill pandas ipykernel
+      #    python -m ipykernel install --user --name python3 --display-name "Python 3"
 
-      - name: Upload Extract Notebook
-        uses: actions/upload-artifact@v4
-        with:
-          name: extract_notebook
-          path: output/01_extract_out.ipynb
-          retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
+      #- name: Run ETL Notebook
+      #  run: |
+      #    papermill notebooks/01_extract.ipynb output/01_extract_out.ipynb --kernel python
+
+      #- name: Upload Extract Notebook
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: extract_notebook
+      #    path: output/01_extract_out.ipynb
+      #    retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
 
       - name: Upload raw data
         uses: actions/upload-artifact@v4
@@ -68,74 +73,74 @@ jobs:
           path: data/raw-data.csv
           retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_DATA_RETENTION_DAYS }}
 
-      - name: Upload to Google Drive
-        uses: willo32/google-drive-upload-action@v1
-        with:
-          target: data/raw-data.csv
-          credentials: ${{ secrets.GDRIVE_SERVICE_ACCOUNT }}
-          parent_folder_id: ${{ env.DRIVE_FOLDER_ID }}
-          name: raw-data_${{ env.TIMESTAMP }}.csv
-
-  transform:
-    name: Transform
-    needs: extract
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Download raw data
-        uses: actions/download-artifact@v4
-        with:
-          name: raw-data
-          path: ./data/
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.8"
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install papermill ipykernel
-          python -m ipykernel install --user --name python3 --display-name "Python 3"
-
-      - name: Run Transform Notebook
-        run: |
-          papermill notebooks/02_transform.ipynb output/02_transform_out.ipynb --kernel python
-
-      - name: Upload Transform Notebook
-        uses: actions/upload-artifact@v4
-        with:
-          name: transform_notebook
-          path: output/02_transform_out.ipynb
-          retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
-
-      - name: Upload clean data
-        uses: actions/upload-artifact@v4
-        with:
-          name: clean-data
-          path: ./data/clean-data.csv
-          retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_DATA_RETENTION_DAYS }}
-
-  load:
-    name: Load
-    needs: transform
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Download clean data
-        uses: actions/download-artifact@v4
-        with:
-          name: clean-data
-          path: ./data/
-
-      #- name: Set up Python
-      #  uses: actions/setup-python@v4
+      #- name: Upload to Google Drive
+      #  uses: willo32/google-drive-upload-action@v1
       #  with:
+      #    target: data/raw-data.csv
+      #    credentials: ${{ secrets.GDRIVE_SERVICE_ACCOUNT }}
+      #    parent_folder_id: ${{ env.DRIVE_FOLDER_ID }}
+      #    name: raw-data_${{ env.TIMESTAMP }}.csv
+
+  #transform:
+  #  name: Transform
+  #  needs: extract
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout repo
+  #      uses: actions/checkout@v4
+#
+  #    - name: Download raw data
+  #      uses: actions/download-artifact@v4
+  #      with:
+  #        name: raw-data
+  #        path: ./data/
+#
+  #    - name: Set up Python
+  #      uses: actions/setup-python@v4
+  #      with:
+  #        python-version: "3.8"
+#
+  #    - name: Install dependencies
+  #      run: |
+  #        python -m pip install --upgrade pip
+  #        pip install papermill ipykernel
+  #        python -m ipykernel install --user --name python3 --display-name "Python 3"
+#
+  #    - name: Run Transform Notebook
+  #      run: |
+  #        papermill notebooks/02_transform.ipynb output/02_transform_out.ipynb --kernel python
+#
+  #    - name: Upload Transform Notebook
+  #      uses: actions/upload-artifact@v4
+  #      with:
+  #        name: transform_notebook
+  #        path: output/02_transform_out.ipynb
+  #        retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
+#
+  #    - name: Upload clean data
+  #      uses: actions/upload-artifact@v4
+  #      with:
+  #        name: clean-data
+  #        path: ./data/clean-data.csv
+  #        retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_DATA_RETENTION_DAYS }}
+#
+  #load:
+  #  name: Load
+  #  needs: transform
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout repo
+  #      uses: actions/checkout@v4
+#
+  #    - name: Download clean data
+  #      uses: actions/download-artifact@v4
+  #      with:
+  #        name: clean-data
+  #        path: ./data/
+#
+  #    #- name: Set up Python
+  #    #  uses: actions/setup-python@v4
+  #    #  with:
       #    python-version: "3.8"
 
       #- name: Install dependencies
