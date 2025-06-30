@@ -46,8 +46,7 @@ jobs:
 
       - name: Run Browsertrix Crawler
         run: |
-          docker run -v $(pwd)/data:/crawls webrecorder/browsertrix-crawler \
-        crawl --url=https://www.minedu.gob.bo --scopeType=page --generateWarc
+          docker run -v $(pwd)/data:/crawls webrecorder/browsertrix-crawler crawl --url=https://www.minedu.gob.bo --scopeType=page --generateWarc
 
       #- name: Install dependencies
       #  run: |
