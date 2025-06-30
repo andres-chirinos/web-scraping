@@ -1,8 +1,8 @@
 name: ETL Pipeline
 
 on:
-  schedule:
-    - cron: "0 6 * * *"
+  #schedule:
+  #  - cron: "0 6 * * *"
   workflow_dispatch:
   #push:
   #  branches:
@@ -170,28 +170,29 @@ jobs:
       #    path: great_expectations/uncommitted/validations/
       #    retention-days: ${{ env.GITHUB_ACTIONS_ARTIFACT_LOGS_RETENTION_DAYS }}
 
-      - name: Push to Kaggle
-        uses: jaimevalero/push-kaggle-dataset@v3.2
-        env:
-          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
-          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-        with:
-          id: ${{ env.KAGGLE_DATASET_ID }}
-          title: ${{ env.PROJECT_NAME }}
-          description: ${{ env.DESCRIPTION }}
-          is_public: ${{ env.KAGGLE_IS_PUBLIC }}
-          files: |
-            "./data/*.csv"
-            "./data/*.parquet"
-
-  report:
-    name: Create Failure Issue
-    needs: [extract, transform, load]
-    if: ${{ failure() }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Open Issue on Failure
-        uses: peter-evans/create-issue-from-file@v5
-        with:
-          title: "ETL Pipeline Failure"
-          content-filepath: https://raw.githubusercontent.com/andres-chirinos/github_actions_etl_template/refs/heads/main/.github/ISSUE_TEMPLATE/etl_failure.md
+#      - name: Push to Kaggle
+#        uses: jaimevalero/push-kaggle-dataset@v3.2
+#        env:
+#          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+#          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+#        with:
+#          id: ${{ env.KAGGLE_DATASET_ID }}
+#          title: ${{ env.PROJECT_NAME }}
+#          description: ${{ env.DESCRIPTION }}
+#          is_public: ${{ env.KAGGLE_IS_PUBLIC }}
+#          files: |
+#            "./data/*.csv"
+#            "./data/*.parquet"
+#
+#  report:
+#    name: Create Failure Issue
+#    needs: [extract, transform, load]
+#    if: ${{ failure() }}
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Open Issue on Failure
+#        uses: peter-evans/create-issue-from-file@v5
+#        with:
+#          title: "ETL Pipeline Failure"
+#          content-filepath: https://raw.githubusercontent.com/andres-chirinos/github_actions_etl_template/refs/heads/main/.github/ISSUE_TEMPLATE/etl_failure.md
+#
