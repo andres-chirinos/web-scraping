@@ -46,7 +46,7 @@ jobs:
 
       - name: Run Browsertrix Crawler
         run: |
-          cat ./crawl-config.yaml | docker run -i -v /data:/crawls/ webrecorder/browsertrix-crawler crawl --config stdin
+          python3 -c "import sys, yaml, json; print(json.dumps(yaml.safe_load(sys.stdin)))" < ./crawl-config.yaml | docker run -i -v /data:/crawls/ webrecorder/browsertrix-crawler crawl --config stdin
 
       #--seedFile /app/seedFile.txt
 
