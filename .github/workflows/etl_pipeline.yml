@@ -50,7 +50,7 @@ jobs:
 
       - name: Run Browsertrix Crawler
         run: |
-          docker run -v ${{ github.workspace }}/data:/crawls/ webrecorder/browsertrix-crawler crawl --config /crawls/crawl-config.json
+          docker run -v ${{ github.workspace }}/crawl-config.json:/crawl-config.json -v ${{ github.workspace }}/data:/crawls/ webrecorder/browsertrix-crawler crawl --config crawl-config.json
 
       #- name: Install dependencies
       #  run: |
