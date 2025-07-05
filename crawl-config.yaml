@@ -1,7 +1,34 @@
-name: crawl-test-1
-collection: configtest
+name: umsa-crawl-1
+collection: umsa-crawl-1
+workers: 8 
+saveState: always
+
+blockRules:
+  - url: google-analytics.com
+  - url: googletagmanager.com
+  - url: googlesyndication.com
+  - url: yandex.ru
+  - url: liveinternet.ru
+  - url: hotlog.ru
+  - url: openstat.net
+  - url: mycounter.ua
+  - url: facebook.(com|net)
+  - url: www.acint.net
+  - url: news.2xclick.ru
+  - url: culturaltracking.ru
+  - url: sape.ru
+
 seeds:
-  - https://umsa.bo/
-  - https://www.minedu.gob.bo/
+  - url: https://umsa.bo/
+    depth: 1
+    scoreType: "host"
+    # include:
+    # exclude:
 
 generateWACZ: true
+
+warcinfo:
+  operator: my-org
+  hostname: hostname.my-org
+
+screenshot: fullPage
