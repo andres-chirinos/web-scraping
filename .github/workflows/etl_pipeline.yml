@@ -44,13 +44,13 @@ jobs:
       #  with:
       #    python-version: "3.8"
 
-      - name: Convert crawl-config.yaml to crawl-config.json
-        run: |
-          python3 -c "import sys, yaml, json; json.dump(yaml.safe_load(open('crawl-config.yaml')), open('crawl-config.json','w'))"
+      #- name: Convert crawl-config.yaml to crawl-config.json
+      #  run: |
+      #    python3 -c "import sys, yaml, json; json.dump(yaml.safe_load(open('crawl-config.yaml')), open('crawl-config.json','w'))"
 
       - name: Run Browsertrix Crawler
         run: |
-          docker run -v ${{ github.workspace }}/crawl-config.yml:/crawl-config.yml -v ${{ github.workspace }}/data:/crawls/ webrecorder/browsertrix-crawler crawl --config crawl-config.yml
+          docker run -v ${{ github.workspace }}/crawl-config.yaml:/crawl-config.yaml -v ${{ github.workspace }}/data:/crawls/ webrecorder/browsertrix-crawler crawl --config crawl-config.yaml
 
       #- name: Install dependencies
       #  run: |
