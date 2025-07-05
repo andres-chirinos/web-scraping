@@ -1,0 +1,7 @@
+name: crawl-test-1
+collection: configtest
+seeds:
+  - https://umsa.bo/
+  - https://www.minedu.gob.bo/
+
+generateWACZ: true
