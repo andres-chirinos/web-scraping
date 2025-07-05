@@ -4,9 +4,9 @@ on:
   #schedule:
   #  - cron: "0 6 * * *"
   workflow_dispatch:
-  #push:
-  #  branches:
-  #    - main
+  push:
+    branches:
+      - main
 
 jobs:
   extract:
@@ -50,7 +50,7 @@ jobs:
 
       - name: Run Browsertrix Crawler
         run: |
-          docker run -v ${{ github.workspace }}/data:/crawls/ webrecorder/browsertrix-crawler crawl --config /data/crawl-config.json
+          docker run -v ${{ github.workspace }}/data:/crawls/ webrecorder/browsertrix-crawler crawl --config /crawls/crawl-config.json
 
       #- name: Install dependencies
       #  run: |
